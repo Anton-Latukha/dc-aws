@@ -1,0 +1,48 @@
+version: '2'
+# Basic compose-file for Ghost
+# Maintainer: anton.latukha+dockerhub@gmail.com
+
+services:
+
+  app:
+    image: ghost
+    volumes:
+      - mainD:/var/lib/ghost
+#    ports:
+#      - 2368:2368
+    expose:
+      - 2368
+    environment:
+      - VIRTUAL_HOST
+      - VIRTUAL_PORT
+      - LETSENCRYPT_HOST
+      - LETSENCRYPT_EMAIL
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs:ro
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+    environment:
+      - DEFAULT_HOST
+  
+  proxy-ltsncrpt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+
+volumes:
+  mainD:
+    driver: local
+  certs:
+    driver: local
+  vhost.d:
+    driver: local
+  html:
+    driver: local
