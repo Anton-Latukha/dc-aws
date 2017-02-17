@@ -35,6 +35,7 @@ services:
   proxy-ltsncrpt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - certs:/etc/nginx/certs:rw
       - vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
