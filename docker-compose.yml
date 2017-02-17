@@ -34,7 +34,7 @@ services:
   
   proxy-ltsncrpt:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    volumes-from:
+    volumes_from:
       - nginx-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -42,10 +42,6 @@ services:
 
 volumes:
   mainD:
-    driver: local
   certs:
-    driver: local
   vhost.d:
-    driver: local
   html:
-    driver: local
