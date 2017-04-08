@@ -4,7 +4,7 @@ version: '2'
 
 services:
 
-  app:
+  ghost:
     image: ghost
     volumes:
       - mainD:/var/lib/ghost
@@ -14,10 +14,56 @@ services:
       - 2368
     environment:
       - VIRTUAL_HOST
-      - VIRTUAL_PORT
+      - VIRTUAL_PORT=2368
       - LETSENCRYPT_HOST
       - LETSENCRYPT_EMAIL
+      
+  nextcloud:
+    depends_on:
+      - mariadb
+    image: wonderfall/nextcloud # https://hub.docker.com/r/wonderfall/nextcloud/
+    links:
+      - mariadb:db
+    expose:
+      - 8888
+    environment:
+      - VIRTUAL_HOST=cloud.latukha.com
+      - VIRTUAL_PORT=8888
+      - LETSENCRYPT_HOST=cloud.latukha.com
+      - LETSENCRYPT_EMAIL
+      - DB_TYPE # database type (sqlite3, mysql or pgsql) (default : sqlite3)
+      - DB_NAME # name of database (default : none)
+      - DB_USER # username for database (default : none)
+      - DB_PASSWORD # password for database user (default : none)
+      - DB_HOST # database host (default : none)
+      #- UID # nextcloud user id (default : 991)
+      #- GID # nextcloud group id (default : 991)
+      #- UPLOAD_MAX_SIZE # maximum upload size (default : 10G)SIZE
+      #- ADMIN_USER # username of the admin account (default : admin)
+      #- ADMIN_PASSWORD # password of the admin account (default : admin)
+      #- TZ # the system/log timezone (default : Etc/UTC)
+      #- CRON_PERIOD # time interval between two cron tasks (default : 15m)
+      #- REDIS_MAX_MEMORY # memory limit for Redis (default : 64mb)
+      #- APC_SHM_SIZE # apc memory size (default : 128M)
+      #- OPCACHE_MEM_SIZE # opcache memory size in megabytes (default : 128)
+    volumes:
+    - nextcloudD:/data # Nextcloud data.
+    - nextcloudC:/config # config.php location.
+    - nextcloudA:/apps2 # Nextcloud downloaded apps.
+    - nextcloudRedis:/var/lib/redis # Redis dumpfile location.
+#    ports:
+#      - 80:8888
 
+  mariadb:
+    image: mariadb
+    volumes:
+      - mariaDB:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      
   nginx-proxy:
     image: jwilder/nginx-proxy
     ports:
@@ -45,3 +91,9 @@ volumes:
   certs:
   vhost.d:
   html:
+  volumes:
+  nextcloudD:
+  nextcloudC:
+  nextcloudA:
+  nextcloudRedis:
+  mariaDB:
