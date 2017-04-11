@@ -2,11 +2,11 @@ version: '2'
 # Basic compose-file for Ghost
 # Maintainer: anton.latukha+dockerhub@gmail.com
 
-services:
-  nginx-static:
-    image: nginx:alpine
-    volumes:
-      - static:/usr/share/nginx/html:ro
+#services:
+  #nginx-static:
+    #image: nginx:alpine
+    #volumes:
+      #- static:/usr/share/nginx/html:ro
     
   ghost:
     image: ghost
