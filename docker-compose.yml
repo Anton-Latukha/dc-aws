@@ -3,7 +3,11 @@ version: '2'
 # Maintainer: anton.latukha+dockerhub@gmail.com
 
 services:
-
+  nginx-static:
+    image: nginx:alpine
+    volumes:
+      - static:/usr/share/nginx/html:ro
+    
   ghost:
     image: ghost
     volumes:
@@ -13,7 +17,7 @@ services:
     expose:
       - 2368
     environment:
-      - VIRTUAL_HOST
+      - VIRTUAL_HOST=ghost.latukha.com
       - VIRTUAL_PORT=2368
       - LETSENCRYPT_HOST
       - LETSENCRYPT_EMAIL
@@ -64,8 +68,8 @@ services:
       - MYSQL_USER
       - MYSQL_PASSWORD
       
-  nginx-proxy:
-    image: jwilder/nginx-proxy
+  proxy-nginx:
+    image: jwilder/nginx-proxy:alpine
     ports:
       - 80:80
       - 443:443
@@ -91,7 +95,6 @@ volumes:
   certs:
   vhost.d:
   html:
-  volumes:
   nextcloudD:
   nextcloudC:
   nextcloudA:
