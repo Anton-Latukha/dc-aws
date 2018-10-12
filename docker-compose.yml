@@ -8,13 +8,13 @@ services:
     volumes_from:
       - static_html
     environment:
-      - VIRTUAL_HOST=blog.latukha.com
-      - LETSENCRYPT_HOST=blog.latukha.com
+      - VIRTUAL_HOST=blog.latukha.com,latukha.com
+      - LETSENCRYPT_HOST=blog.latukha.com,latukha.com
       - LETSENCRYPT_EMAIL
       
   static_html:
     build:
-      context: ./staticHTMLDataCont
+      - context: ./staticHTMLDataCont
     volumes:
       - nxStaticHTML:/usr/share/nginx/html:ro
     
@@ -29,7 +29,7 @@ services:
     environment:
       - VIRTUAL_HOST=ghost.latukha.com
       - VIRTUAL_PORT=2368
-      - LETSENCRYPT_HOST
+      - LETSENCRYPT_HOST=ghost.latukha.com
       - LETSENCRYPT_EMAIL
       
   nextcloud:
